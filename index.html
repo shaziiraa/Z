@@ -3,119 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Happy Birthday</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Untukmu | Spesial Ulang Tahun</title>
+    
+    <!-- Tailwind CSS untuk utilitas layout -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- Google Fonts: Playfair Display (Sangat Elegan/Serif) & Lato (Minimalis/Sans-serif) -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500&display=swap');
-
         :root {
-            --midnight-blue: #0A1128;
-            --gold: #D4AF37;
+            --bg-deep: #050b14;
+            --bg-navy: #0a192f;
+            --gold-light: #fbeea0;
+            --gold-dark: #d4af37;
+            --text-main: #f8fafc;
         }
 
         body {
-            background-color: var(--midnight-blue);
-            color: #ffffff;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Lato', sans-serif;
+            background: radial-gradient(circle at top right, var(--bg-navy) 0%, var(--bg-deep) 100%);
+            color: var(--text-main);
             overflow-x: hidden;
-            margin: 0;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 100vh;
         }
 
-        h1, h2, h3, .serif {
+        .font-serif {
             font-family: 'Playfair Display', serif;
         }
 
-        /* --- Animasi Bintang Jatuh --- */
-        .shooting-star-container {
+        #stars-container {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
+            width: 100%;
+            height: 100%;
             z-index: 0;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out alternate;
+            opacity: var(--opacity);
+        }
+
+        @keyframes twinkle {
+            0% { transform: scale(0.8); opacity: 0.2; }
+            100% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 8px rgba(255,255,255,0.8); }
+        }
+
+        #shooting-stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
             overflow: hidden;
         }
 
         .shooting-star {
             position: absolute;
-            width: 150px;
-            height: 2px;
-            background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,1));
-            border-radius: 50%;
-            filter: drop-shadow(0 0 6px rgba(255,255,255,1));
-            transform: rotate(-45deg);
+            height: 1px;
+            background: linear-gradient(-45deg, rgba(255,255,255,1), rgba(255,255,255,0));
+            filter: drop-shadow(0 0 6px rgba(255, 255, 255, 1));
+            border-radius: 999px;
+            animation: shoot var(--duration) linear infinite;
+            animation-delay: var(--delay);
             opacity: 0;
         }
 
-        /* --- Layar & Transisi Smooth Blur --- */
-        .screen {
+        .shooting-star::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+            left: 0;
+        }
+
+        @keyframes shoot {
+            0% {
+                transform: translateX(0) translateY(0) rotate(-45deg);
+                opacity: 0;
+                width: 0;
+            }
+            5% {
+                opacity: 1;
+                width: 150px;
+            }
+            15% {
+                transform: translateX(-100vw) translateY(100vw) rotate(-45deg);
+                opacity: 0;
+                width: 0;
+            }
+            100% {
+                transform: translateX(-100vw) translateY(100vw) rotate(-45deg);
+                opacity: 0;
+                width: 0;
+            }
+        }
+
+        #envelope-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: inherit;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), filter 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s;
+        }
+
+        #envelope-screen.hide {
+            opacity: 0;
+            visibility: hidden;
+            filter: blur(15px);
+            transform: scale(1.1);
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .envelope-wrapper:active {
+            transform: scale(0.95);
+        }
+
+        .envelope-back {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #112240 0%, #0a192f 100%);
+            border-radius: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .envelope-card-preview {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background: #fff;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-origin: bottom;
+            z-index: 1;
+        }
+
+        .envelope-front {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Flap atas amplop */
+        .flap {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1s cubic-bezier(0.4, 0, 0.2, 1), filter 1s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 110px solid #1a2f4c;
+            transform-origin: top;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), z-index 0s 0.4s;
+            z-index: 4;
+            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.2));
         }
 
-        .hidden-screen {
-            opacity: 0;
-            pointer-events: none;
-            visibility: hidden;
+        /* Bagian bawah dan samping amplop */
+        .pocket {
             position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid #162842;
+            border-right: 150px solid #162842;
+            border-bottom: 100px solid #1c3355;
+            z-index: 3;
+            border-radius: 0 0 8px 8px;
         }
 
-        .active-screen {
-            opacity: 1;
-            pointer-events: auto;
-            visibility: visible;
+        .envelope-text {
+            position: absolute;
+            bottom: -50px;
+            width: 100%;
+            text-align: center;
+            color: var(--gold-light);
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            animation: pulseText 2s infinite;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; text-shadow: 0 0 10px rgba(251, 238, 160, 0.5); }
+        }
+
+        /* Animasi saat amplop dibuka */
+        .envelope-wrapper.open .flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+        .envelope-wrapper.open .envelope-card-preview {
+            transform: translateY(-80px);
+            z-index: 5;
+        }
+
+        #main-screen {
             position: relative;
-        }
-
-        .blur-out {
-            opacity: 0 !important;
-            filter: blur(15px) !important;
-            transform: scale(1.1) !important;
-        }
-
-        /* --- Dekorasi Amplop --- */
-        .envelope-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .glow-button {
-            background: linear-gradient(135deg, var(--gold), #f3e5ab);
-            color: var(--midnight-blue);
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-            transition: all 0.3s ease;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s, filter 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-bottom: 4rem;
+            overflow: hidden; /* Mencegah horizontal scrollbar bawaan */
         }
         
-        .glow-button:active {
-            transform: scale(0.95);
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.8);
+        #main-screen.hide {
+            opacity: 0;
+            visibility: hidden;
+            filter: blur(10px);
         }
 
-        /* --- Galeri Marquee Full Bleed --- */
-        .gallery-container {
+        #closing-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.5s;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        /* Animasi Galeri Berjalan (Marquee) FULL WIDTH */
+        .gallery-wrapper {
             width: 100vw;
             position: relative;
-            left: 50%;
-            transform: translateX(-50%);
             overflow: hidden;
-            padding: 20px 0;
+            padding: 24px 0;
+            /* Efek pudar di tepi kanan dan kiri dikurangi agar foto terlihat lebih penuh */
             mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
             -webkit-mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
         }
@@ -124,208 +277,308 @@
             display: flex;
             gap: 20px;
             width: max-content;
-            animation: scrollMarquee 20s linear infinite;
+            /* Diperlambat sedikit karena ukurannya lebih besar */
+            animation: scrollMarquee 35s linear infinite;
         }
 
-        .gallery-track:hover {
-            animation-play-state: paused;
-        }
-
-        .photo-card {
-            width: 260px;
-            height: 360px;
-            border-radius: 16px;
-            object-fit: cover;
-            border: 2px solid rgba(212, 175, 55, 0.5);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        .gallery-item {
             flex-shrink: 0;
-            background-color: rgba(255, 255, 255, 0.1);
+            width: 260px; /* Jauh lebih besar dan lega */
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .gallery-item img {
+            border-radius: 10px;
+            width: 100%;
+            height: 360px; /* Foto jauh lebih tinggi dan dominan */
+            object-fit: cover;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+            pointer-events: none;
         }
 
         @keyframes scrollMarquee {
             0% { transform: translateX(0); }
-            100% { transform: translateX(calc(-50% - 10px)); }
+            /* Menggeser setengah dari total lebar dikurangi setengah dari gap (20px / 2 = 10px) */
+            100% { transform: translateX(calc(-50% - 10px)); } 
         }
 
-        .deco-icon {
-            fill: var(--gold);
-            opacity: 0.8;
-        }
+        /* Dekorasi SVG Fix Positioning */
+        .deco-moon { position: absolute; top: 30px; right: 30px; opacity: 0.8; z-index: 1; }
+        .deco-flower-tl { position: absolute; top: -10px; left: -20px; opacity: 0.7; z-index: 1; transform: scale(0.8); }
+        .deco-flower-br { position: absolute; bottom: 10vh; right: -20px; opacity: 0.7; z-index: 1; transform: scale(0.9) rotate(15deg); }
+        .deco-flower-bl { position: absolute; bottom: 30vh; left: -15px; opacity: 0.6; z-index: 1; transform: scale(0.7) rotate(-20deg); }
     </style>
 </head>
 <body>
 
-    <!-- Bintang Jatuh Background -->
-    <div class="shooting-star-container" id="starContainer"></div>
+    <script>
+        // 1. MASUKKAN LINK FOTO-FOTO ANDA DI SINI
+        // Anda bisa memasukkan berapapun foto (direkomendasikan 5 atau lebih)
+        const GALLERY_PHOTOS = [
+            "https://placehold.co/600x800/0a192f/d4af37?text=Foto+Kenangan+1",
+            "https://placehold.co/600x800/0a192f/d4af37?text=Foto+Kenangan+2",
+            "https://placehold.co/800x600/0a192f/d4af37?text=Foto+Kenangan+3",
+            "https://placehold.co/600x800/0a192f/d4af37?text=Foto+Kenangan+4",
+            "https://placehold.co/800x600/0a192f/d4af37?text=Foto+Kenangan+5"
+        ];
 
-    <!-- LAYAR 1: AMPLOP / OPENING -->
-    <div id="screen1" class="screen active-screen px-6">
-        <div class="envelope-card p-8 w-full max-w-sm text-center">
-            <!-- Dekorasi Bintang & Bulan -->
-            <div class="flex justify-center mb-6 space-x-4 items-center">
-                <svg class="deco-icon w-8 h-8" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
-                <svg class="deco-icon w-12 h-12" viewBox="0 0 24 24"><path d="M12 3C10.73 3 9.54 3.29 8.46 3.81C10.6 5.28 12 7.79 12 10.69C12 14.54 9.17 17.72 5.44 18.23C7.29 19.96 9.8 21 12.5 21C17.75 21 22 16.75 22 11.5C22 6.25 17.75 3 12 3Z"/></svg>
-                <svg class="deco-icon w-8 h-8" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
-            </div>
-            
-            <h1 class="text-2xl mb-2 text-[#D4AF37]">Untuk Kamu,</h1>
-            <p class="text-sm text-gray-300 mb-8 font-light">Ada pesan spesial yang menunggu di dalam.</p>
-            
-            <!-- Bunga Daisy & Sunflower -->
-            <div class="flex justify-between px-4 mb-6 text-2xl">
-                <span>🌼</span>
-                <span>🌻</span>
-            </div>
+        // 2. MASUKKAN TEKS UCAPAN ANDA DI SINI
+        const GREETING_TITLE = "Selamat Ulang Tahun";
+        const GREETING_NAME = "Nama Pasangan/Teman";
+        const GREETING_MESSAGE = "Di bawah langit malam dan taburan bintang ini, aku hanya ingin mengucapkan terima kasih karena telah hadir. Semoga setiap langkahmu selalu diiringi kebahagiaan, dan semua yang kamu semogakan segera terwujud. Tetaplah bersinar dengan indah.";
+    </script>
 
-            <button onclick="openEnvelope()" class="glow-button w-full py-3 rounded-full font-semibold tracking-wide flex items-center justify-center gap-2">
-                Buka Ucapan <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
-            </button>
+    <!-- 3. MASUKKAN LINK LAGU ANDA DI SINI -->
+    <!-- Ganti src="..." dengan link file MP3 Anda. Pastikan file ada di project atau gunakan URL langsung -->
+    <audio id="bg-music" src="YOUR_MUSIC_FILE.mp3" preload="auto" loop></audio>
+    <!-- ==================================================================== -->
+
+
+    <!-- Bintang Background -->
+    <div id="stars-container"></div>
+    <!-- Container untuk Shooting Stars -->
+    <div id="shooting-stars-container"></div>
+
+    <!-- Dekorasi SVG Elegan -->
+    <!-- Bulan Sabit -->
+    <svg class="deco-moon w-24 h-24 text-yellow-100/80" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M70,10 C50,15 35,35 40,60 C42,70 50,80 60,85 C40,85 20,65 25,40 C28,25 40,12 55,10 C60,9 65,9 70,10 Z"/>
+    </svg>
+
+    <!-- Bunga Matahari (Kanan Bawah) -->
+    <svg class="deco-flower-br w-40 h-40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="rgba(212, 175, 55, 0.5)" stroke-width="1" fill="none">
+            <!-- Kelopak -->
+            <path d="M50,20 Q60,5 50,50 Q40,5 50,20 Z" fill="rgba(251, 191, 36, 0.15)"/>
+            <path d="M80,50 Q95,40 50,50 Q95,60 80,50 Z" fill="rgba(251, 191, 36, 0.15)"/>
+            <path d="M50,80 Q60,95 50,50 Q40,95 50,80 Z" fill="rgba(251, 191, 36, 0.15)"/>
+            <path d="M20,50 Q5,40 50,50 Q5,60 20,50 Z" fill="rgba(251, 191, 36, 0.15)"/>
+            <path d="M71,29 Q85,15 50,50 Q85,25 71,29 Z" fill="rgba(251, 191, 36, 0.15)"/>
+            <path d="M29,71 Q15,85 50,50 Q15,75 29,71 Z" fill="rgba(251, 191, 36, 0.15)"/>
+            <path d="M71,71 Q85,85 50,50 Q75,85 71,71 Z" fill="rgba(251, 191, 36, 0.15)"/>
+            <path d="M29,29 Q15,15 50,50 Q25,15 29,29 Z" fill="rgba(251, 191, 36, 0.15)"/>
+            <!-- Tengah -->
+            <circle cx="50" cy="50" r="12" fill="rgba(50, 30, 10, 0.8)"/>
+            <circle cx="50" cy="50" r="10" stroke="rgba(212, 175, 55, 0.8)" stroke-dasharray="2 2"/>
+        </g>
+    </svg>
+
+    <!-- Bunga Daisy (Kiri Atas & Kiri Bawah) -->
+    <svg class="deco-flower-tl w-32 h-32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="rgba(255, 255, 255, 0.4)" stroke-width="1.5" fill="none">
+            <ellipse cx="50" cy="30" rx="6" ry="18" fill="rgba(255,255,255,0.05)" />
+            <ellipse cx="50" cy="70" rx="6" ry="18" fill="rgba(255,255,255,0.05)" />
+            <ellipse cx="30" cy="50" rx="18" ry="6" fill="rgba(255,255,255,0.05)" />
+            <ellipse cx="70" cy="50" rx="18" ry="6" fill="rgba(255,255,255,0.05)" />
+            <ellipse cx="36" cy="36" rx="18" ry="6" transform="rotate(45 36 36)" fill="rgba(255,255,255,0.05)" />
+            <ellipse cx="64" cy="64" rx="18" ry="6" transform="rotate(45 64 64)" fill="rgba(255,255,255,0.05)" />
+            <ellipse cx="64" cy="36" rx="18" ry="6" transform="rotate(-45 64 36)" fill="rgba(255,255,255,0.05)" />
+            <ellipse cx="36" cy="64" rx="18" ry="6" transform="rotate(-45 36 64)" fill="rgba(255,255,255,0.05)" />
+            <circle cx="50" cy="50" r="8" fill="rgba(251, 191, 36, 0.7)" stroke="none"/>
+        </g>
+    </svg>
+
+    <!-- LAYAR 1: AMPLOP INTERAKTIF -->
+    <div id="envelope-screen">
+        <div class="envelope-wrapper" id="envelope">
+            <div class="envelope-back"></div>
+            <div class="envelope-card-preview">
+                <div class="w-[90%] h-[90%] border border-yellow-500/30 flex items-center justify-center">
+                    <span class="font-serif text-slate-800 text-sm">Untukmu</span>
+                </div>
+            </div>
+            <div class="envelope-front">
+                <div class="flap"></div>
+                <div class="pocket"></div>
+            </div>
+            <div class="envelope-text font-serif italic">Sentuh untuk membuka</div>
         </div>
     </div>
 
-    <!-- LAYAR 2: MAIN CONTENT (GALERI & UCAPAN) -->
-    <div id="screen2" class="screen hidden-screen pb-12 pt-12">
-        <div class="w-full max-w-md px-6 text-center mb-8">
-            <h1 class="text-4xl text-[#D4AF37] mb-4">Happy Birthday!</h1>
-            <p class="text-base text-gray-200 leading-relaxed font-light">
-                Semoga hari ini seindah senyumanmu. Teruslah bersinar seperti bintang di langit malam, dan mekar dengan indah seperti bunga di musim semi.
-            </p>
-        </div>
-
-        <!-- Galeri Full Bleed (100vw) -->
-        <div class="gallery-container">
-            <div class="gallery-track" id="galleryTrack">
-                <!-- Foto akan di-generate otomatis oleh JavaScript -->
+    <!-- LAYAR 2: KONTEN UTAMA (Ucapan & Galeri) -->
+    <!-- Mengubah pembungkus agar bisa 100vw (Full Width) tanpa batasan padding samping -->
+    <main id="main-screen" class="w-full pt-16 flex flex-col items-center">
+        
+        <!-- Bagian Teks Ucapan (Diberi max-width dan padding agar teks tetap rapi di tengah) -->
+        <div class="max-w-md mx-auto px-6 text-center mb-12 relative z-20">
+            <div class="w-12 h-[1px] bg-yellow-400/50 mx-auto mb-6"></div>
+            
+            <h2 class="text-xs uppercase tracking-[0.4em] text-yellow-200/70 mb-3" id="render-title"></h2>
+            
+            <h1 class="text-4xl font-serif text-white mb-6 leading-tight" id="render-name"></h1>
+            
+            <div class="relative">
+                <span class="absolute -top-4 -left-2 text-4xl text-yellow-500/20 font-serif">"</span>
+                <p class="text-slate-300 font-light leading-relaxed text-sm px-4" id="render-message"></p>
+                <span class="absolute -bottom-6 -right-2 text-4xl text-yellow-500/20 font-serif">"</span>
             </div>
+            
+            <div class="w-12 h-[1px] bg-yellow-400/50 mx-auto mt-10"></div>
         </div>
 
-        <div class="mt-10">
-            <button onclick="goToClosing()" class="px-8 py-3 rounded-full font-medium text-white border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#0A1128] transition-all backdrop-blur-sm">
+        <!-- Bagian Galeri Foto (Tanpa padding samping, tembus layar kiri-kanan) -->
+        <div class="w-full relative z-20 mt-4 overflow-hidden" id="gallery-container">
+            <!-- Foto akan di-render menggunakan JavaScript di sini -->
+        </div>
+        
+        <div class="mt-12 mb-12 text-center text-xs text-slate-500 font-light tracking-widest uppercase">
+            — Memori Indah —
+        </div>
+        
+        <div class="mt-4 mb-16 relative z-30 text-center">
+            <button id="btn-closing" class="px-8 py-3 border border-yellow-500/50 rounded-full text-yellow-200 text-sm tracking-widest uppercase hover:bg-yellow-500/20 active:scale-95 transition-all backdrop-blur-sm shadow-[0_0_15px_rgba(212,175,55,0.2)]">
                 Baca Penutup
             </button>
         </div>
-    </div>
+    </main>
 
-    <!-- LAYAR 3: CLOSING -->
-    <div id="screen3" class="screen hidden-screen px-6 text-center">
-        <div class="max-w-sm">
-            <div class="flex justify-center mb-6">
-                <svg class="deco-icon w-12 h-12" viewBox="0 0 24 24"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.28 2,8.5C2,5.42 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.09C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.42 22,8.5C22,12.28 18.6,15.36 13.45,20.04L12,21.35Z"/></svg>
-            </div>
-            <h2 class="text-3xl text-[#D4AF37] mb-4">Terima Kasih</h2>
-            <p class="text-gray-300 font-light leading-relaxed mb-8">
-                Sudah menjadi versi terbaik dari dirimu. Nikmati harimu, dan mari buat lebih banyak kenangan indah bersama. 
-            </p>
-            <div class="text-xl">✨🌼🌻🌙</div>
-        </div>
-    </div>
+    <section id="closing-screen">
+        <div class="w-12 h-[1px] bg-yellow-400/50 mx-auto mb-8"></div>
+        <h2 class="text-3xl font-serif text-white mb-6 leading-tight">Sekali Lagi, <br> <span class="text-yellow-400 italic">Selamat Ulang Tahun</span></h2>
+        <p class="text-slate-300 font-light leading-relaxed text-sm max-w-sm px-4 mb-10">
+            Terima kasih telah menjadi bagian dari cerita yang indah ini. Semoga harimu dan tahun-tahun berikutnya selalu dipenuhi senyuman yang tak berkesudahan.
+        </p>
+        <div class="w-12 h-[1px] bg-yellow-400/50 mx-auto"></div>
+    </section>
 
     <script>
-        // ==========================================
-        // BAGIAN PENGATURAN FOTO DAN LAGU
-        // ==========================================
-        
-        // Letakkan file musik .mp3 Anda di dalam folder 'audio' lalu sesuaikan namanya di sini:
-        const BGM_URL = './audio/lagu-kamu.mp3'; 
-        
-        // Letakkan foto-foto Anda di dalam folder 'img' lalu daftarkan namanya di sini:
-        const GALLERY_PHOTOS = [
-            "./img/foto1.jpg",
-            "./img/foto2.jpg",
-            "./img/foto3.jpg",
-            "./img/foto4.jpg",
-            "./img/foto5.jpg"
-        ];
+        // 1. Inisialisasi Teks dari Konfigurasi
+        document.getElementById('render-title').textContent = GREETING_TITLE;
+        document.getElementById('render-name').textContent = GREETING_NAME;
+        document.getElementById('render-message').textContent = GREETING_MESSAGE;
 
-        // ==========================================
-        // LOGIKA SISTEM
-        // ==========================================
+        // 2. Render Galeri Foto Berjalan (Marquee)
+        const galleryContainer = document.getElementById('gallery-container');
         
-        const audio = new Audio(BGM_URL);
-        audio.loop = true;
+        // Buat bungkus dan lintasan animasi
+        let photoHTML = '<div class="gallery-wrapper" style="animation: fadeUp 1s ease 0.5s both;"><div class="gallery-track">';
+        
+        let itemsHTML = '';
+        GALLERY_PHOTOS.forEach((photoSrc, index) => {
+            itemsHTML += `
+                <div class="gallery-item">
+                    <img src="${photoSrc}" alt="Kenangan ${index + 1}" loading="lazy">
+                </div>
+            `;
+        });
 
-        function createShootingStars() {
-            const container = document.getElementById('starContainer');
-            setInterval(() => {
-                const star = document.createElement('div');
-                star.classList.add('shooting-star');
-                star.style.top = Math.random() * 50 + 'vh';
-                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                container.appendChild(star);
+        // Gandakan elemen dua kali agar animasi berjalan tanpa terputus (infinite loop)
+        photoHTML += itemsHTML + itemsHTML;
+        photoHTML += '</div></div>';
+        
+        galleryContainer.innerHTML = photoHTML;
+
+        // 3. Generate Bintang di Latar Belakang
+        const starsContainer = document.getElementById('stars-container');
+        const numStars = 70; // Jumlah bintang
+        for (let i = 0; i < numStars; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            // Posisi acak
+            const x = Math.random() * 100;
+            const y = Math.random() * 100;
+            // Ukuran acak (1px - 3px)
+            const size = Math.random() * 2 + 1;
+            // Durasi kedip acak (3s - 7s)
+            const duration = Math.random() * 4 + 3;
+            // Opasitas dasar
+            const opacity = Math.random() * 0.5 + 0.1;
+
+            star.style.left = `${x}vw`;
+            star.style.top = `${y}vh`;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.setProperty('--duration', `${duration}s`);
+            star.style.setProperty('--opacity', opacity);
+            
+            starsContainer.appendChild(star);
+        }
+
+        const shootingStarsContainer = document.getElementById('shooting-stars-container');
+        const numShootingStars = 6; // Jumlah maksimal bintang jatuh di layar
+        
+        for (let i = 0; i < numShootingStars; i++) {
+            const shootingStar = document.createElement('div');
+            shootingStar.className = 'shooting-star';
+            
+            // Menempatkan awal bintang jatuh (cenderung dari kanan atas)
+            const x = Math.random() * 100 + 30; // 30vw to 130vw
+            const y = Math.random() * -50;      // Mulai dari luar layar atas
+            
+            // Durasi siklus animasi panjang agar muncul berkala (acak antara 8s hingga 15s)
+            const duration = Math.random() * 7 + 8; 
+            // Delay awal agar tidak muncul bersamaan
+            const delay = Math.random() * 10;       
+            
+            shootingStar.style.left = `${x}vw`;
+            shootingStar.style.top = `${y}vh`;
+            shootingStar.style.setProperty('--duration', `${duration}s`);
+            shootingStar.style.setProperty('--delay', `${delay}s`);
+            
+            shootingStarsContainer.appendChild(shootingStar);
+        }
+
+        // 4. Logika Interaksi Amplop & Audio (Bypass iOS Autoplay)
+        const envelopeScreen = document.getElementById('envelope-screen');
+        const envelope = document.getElementById('envelope');
+        const mainScreen = document.getElementById('main-screen');
+        const bgMusic = document.getElementById('bg-music');
+        const btnClosing = document.getElementById('btn-closing');
+        const closingScreen = document.getElementById('closing-screen');
+
+        envelope.addEventListener('click', () => {
+            // Mainkan musik saat pengguna berinteraksi (Syarat wajib iOS/Safari)
+            // Error handling disiapkan jika sumber 'YOUR_MUSIC_FILE.mp3' belum diganti
+            bgMusic.play().catch(e => console.log("Audio belum diatur atau diblokir:", e));
+
+            // Tambahkan class 'open' untuk memicu animasi CSS flap terbuka
+            envelope.classList.add('open');
+
+            // Tunggu animasi amplop selesai, lalu transisi layar dengan motion blur
+            setTimeout(() => {
+                envelopeScreen.classList.add('hide'); // Memicu blur, scale, dan fade out
                 
+                // Munculkan layar utama
+                mainScreen.style.visibility = 'visible';
+                mainScreen.style.opacity = '1';
+                
+                // Hapus amplop dari DOM setelah transisi selesai agar tidak mengganggu scroll
                 setTimeout(() => {
-                    star.remove();
-                }, 5000);
-            }, 3000); 
-        }
+                    envelopeScreen.style.display = 'none';
+                }, 1200);
+            }, 1000); 
+        });
 
-        function renderGallery() {
-            const track = document.getElementById('galleryTrack');
-            let html = '';
+        btnClosing.addEventListener('click', () => {
+            // Sembunyikan layar utama dengan efek blur
+            mainScreen.classList.add('hide');
             
-            const errorSrc = "this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNjAiIGhlaWdodD0iMzYwIiByZXg9IjE2IiBmaWxsPSIjMEYxNzJBIiBzdHJva2U9IiNENEFGMzciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMwRjE3MkEiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZmlsbD0iI0Q0QUYzNyIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkltYWdlIE5vdCBGb3VuZDwvdGV4dD48L3N2Zz4='";
-
-            GALLERY_PHOTOS.forEach(photo => {
-                html += `<img src="${photo}" class="photo-card" onerror="${errorSrc}" alt="Memories">`;
-            });
+            // Gulir kembali ke atas perlahan sebelum mengganti layar
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             
-            // Duplikasi untuk efek pergerakan tanpa henti (infinite marquee)
-            GALLERY_PHOTOS.forEach(photo => {
-                html += `<img src="${photo}" class="photo-card" onerror="${errorSrc}" alt="Memories">`;
-            });
-
-            track.innerHTML = html;
-        }
-
-        function openEnvelope() {
-            audio.play().catch(e => console.log("Menunggu interaksi pengguna..."));
-
-            confetti({
-                particleCount: 150,
-                spread: 80,
-                origin: { y: 0.6 },
-                colors: ['#D4AF37', '#ffffff', '#f3e5ab']
-            });
-
-            const screen1 = document.getElementById('screen1');
-            const screen2 = document.getElementById('screen2');
-
-            screen1.classList.add('blur-out');
+            // Tampilkan layar penutup
+            closingScreen.style.visibility = 'visible';
+            closingScreen.style.opacity = '1';
             
+            // Matikan display screen utama setelah blur selesai
             setTimeout(() => {
-                screen1.classList.remove('active-screen');
-                screen1.classList.add('hidden-screen');
-                screen1.classList.remove('blur-out'); 
+                mainScreen.style.display = 'none';
+            }, 1200);
+        });
 
-                screen2.classList.remove('hidden-screen');
-                screen2.classList.add('active-screen');
-                
-                void screen2.offsetWidth; 
-            }, 1000);
-        }
-
-        function goToClosing() {
-            const screen2 = document.getElementById('screen2');
-            const screen3 = document.getElementById('screen3');
-
-            screen2.classList.add('blur-out');
-
-            setTimeout(() => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                
-                screen2.classList.remove('active-screen');
-                screen2.classList.add('hidden-screen');
-                screen2.classList.remove('blur-out');
-
-                screen3.classList.remove('hidden-screen');
-                screen3.classList.add('active-screen');
-            }, 1000);
-        }
-
-        window.onload = () => {
-            createShootingStars();
-            renderGallery();
-        };
+        // CSS tambahan untuk animasi masuk foto (disisipkan via JS agar terorganisir)
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeUp {
+                from { opacity: 0; transform: translateY(30px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
