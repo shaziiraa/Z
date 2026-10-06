@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Birthday</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -47,11 +48,6 @@
             filter: drop-shadow(0 0 6px rgba(255,255,255,1));
             transform: rotate(-45deg);
             opacity: 0;
-        }
-
-        @keyframes shootingStar {
-            0% { transform: translateX(100vw) translateY(-50vh) rotate(-45deg); opacity: 1; }
-            100% { transform: translateX(-50vw) translateY(100vh) rotate(-45deg); opacity: 0; }
         }
 
         /* --- Layar & Transisi Smooth Blur --- */
@@ -120,7 +116,6 @@
             transform: translateX(-50%);
             overflow: hidden;
             padding: 20px 0;
-            /* Fade tipis di sisi kiri & kanan (3%) */
             mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
             -webkit-mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
         }
@@ -152,7 +147,6 @@
             100% { transform: translateX(calc(-50% - 10px)); }
         }
 
-        /* Hiasan Bunga & Bintang SVG */
         .deco-icon {
             fill: var(--gold);
             opacity: 0.8;
@@ -169,17 +163,15 @@
         <div class="envelope-card p-8 w-full max-w-sm text-center">
             <!-- Dekorasi Bintang & Bulan -->
             <div class="flex justify-center mb-6 space-x-4 items-center">
-                <svg class="deco-icon w-8 h-8" viewBox="0 0 24 24"><path d="M12,2A10,10,0,0,1,22,12A10,10,0,0,1,12,22A10,10,0,0,1,2,12A10,10,0,0,1,12,2M12,4A8,8,0,0,0,4,12A8,8,0,0,0,12,20A8,8,0,0,0,20,12A8,8,0,0,0,12,4M12,6A6,6,0,0,1,18,12A6,6,0,0,1,12,18A6,6,0,0,1,6,12A6,6,0,0,1,12,6M12,8A4,4,0,0,0,8,12A4,4,0,0,0,12,16A4,4,0,0,0,16,12A4,4,0,0,0,12,8Z" opacity="0"/></svg>
-                <!-- Ikon Bulan -->
+                <svg class="deco-icon w-8 h-8" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
                 <svg class="deco-icon w-12 h-12" viewBox="0 0 24 24"><path d="M12 3C10.73 3 9.54 3.29 8.46 3.81C10.6 5.28 12 7.79 12 10.69C12 14.54 9.17 17.72 5.44 18.23C7.29 19.96 9.8 21 12.5 21C17.75 21 22 16.75 22 11.5C22 6.25 17.75 3 12 3Z"/></svg>
-                <!-- Ikon Bintang -->
                 <svg class="deco-icon w-8 h-8" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
             </div>
             
             <h1 class="text-2xl mb-2 text-[#D4AF37]">Untuk Kamu,</h1>
             <p class="text-sm text-gray-300 mb-8 font-light">Ada pesan spesial yang menunggu di dalam.</p>
             
-            <!-- Bunga Daisy / Sunflower Ornamen -->
+            <!-- Bunga Daisy & Sunflower -->
             <div class="flex justify-between px-4 mb-6 text-2xl">
                 <span>🌼</span>
                 <span>🌻</span>
@@ -203,7 +195,7 @@
         <!-- Galeri Full Bleed (100vw) -->
         <div class="gallery-container">
             <div class="gallery-track" id="galleryTrack">
-                <!-- Foto akan di-generate oleh JavaScript -->
+                <!-- Foto akan di-generate otomatis oleh JavaScript -->
             </div>
         </div>
 
@@ -217,7 +209,6 @@
     <!-- LAYAR 3: CLOSING -->
     <div id="screen3" class="screen hidden-screen px-6 text-center">
         <div class="max-w-sm">
-            <!-- Ornamen -->
             <div class="flex justify-center mb-6">
                 <svg class="deco-icon w-12 h-12" viewBox="0 0 24 24"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.28 2,8.5C2,5.42 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.09C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.42 22,8.5C22,12.28 18.6,15.36 13.45,20.04L12,21.35Z"/></svg>
             </div>
@@ -231,23 +222,23 @@
 
     <script>
         // ==========================================
-        // BAGIAN UNTUK DIEDIT (FOTO DAN LAGU)
+        // BAGIAN PENGATURAN FOTO DAN LAGU
         // ==========================================
         
-        // 1. Masukkan nama file lagu kamu yang ada di folder audio
+        // Letakkan file musik .mp3 Anda di dalam folder 'audio' lalu sesuaikan namanya di sini:
         const BGM_URL = './audio/lagu-kamu.mp3'; 
         
-        // 2. Masukkan nama-nama file foto kamu yang ada di folder img
+        // Letakkan foto-foto Anda di dalam folder 'img' lalu daftarkan namanya di sini:
         const GALLERY_PHOTOS = [
             "./img/foto1.jpg",
             "./img/foto2.jpg",
             "./img/foto3.jpg",
             "./img/foto4.jpg",
-            "./img/foto5.jpg" // Kamu bisa tambahkan koma dan masukkan foto6, foto7, dst di bawahnya
+            "./img/foto5.jpg"
         ];
 
         // ==========================================
-        // LOGIKA PROGRAM (TIDAK PERLU DIUBAH)
+        // LOGIKA SISTEM
         // ==========================================
         
         const audio = new Audio(BGM_URL);
@@ -272,14 +263,13 @@
             const track = document.getElementById('galleryTrack');
             let html = '';
             
-            // Placeholder abu-abu jika foto belum dimasukkan dengan benar
             const errorSrc = "this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNjAiIGhlaWdodD0iMzYwIiByZXg9IjE2IiBmaWxsPSIjMEYxNzJBIiBzdHJva2U9IiNENEFGMzciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMwRjE3MkEiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZmlsbD0iI0Q0QUYzNyIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkltYWdlIE5vdCBGb3VuZDwvdGV4dD48L3N2Zz4='";
 
             GALLERY_PHOTOS.forEach(photo => {
                 html += `<img src="${photo}" class="photo-card" onerror="${errorSrc}" alt="Memories">`;
             });
             
-            // Duplikasi untuk ilusi infinite scroll
+            // Duplikasi untuk efek pergerakan tanpa henti (infinite marquee)
             GALLERY_PHOTOS.forEach(photo => {
                 html += `<img src="${photo}" class="photo-card" onerror="${errorSrc}" alt="Memories">`;
             });
@@ -311,7 +301,6 @@
                 screen2.classList.add('active-screen');
                 
                 void screen2.offsetWidth; 
-                
             }, 1000);
         }
 
